@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#080F20">
+    <title>DOMPETKU - Finance Manager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="apple-touch-icon" href="icon.png">
+</head>
+<body>
+
+    <!-- LOADING SCREEN ALA GAME -->
+    <div id="gameLoader" class="game-loader" aria-live="polite">
+        <div class="loader-card">
+            <span class="loader-tag">DOMPETKU SYSTEM</span>
+            <div class="loader-logo">
+                <img src="icon.png" alt="Logo DOMPETKU" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                <span style="display:none;">💼</span>
+            </div>
+            <h2 class="loader-title">DOMPET<span>KU</span></h2>
+            <div class="loader-track">
+                <div class="loader-fill" id="loaderFill"></div>
+            </div>
+            <div class="loader-meta">
+                <span id="loaderStatus">Menyiapkan dompetmu...</span>
+                <span class="mono" id="loaderPercent">0%</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ONBOARDING KARAKTER 2D -->
+    <div id="onboardingModal" class="onboarding-overlay" aria-modal="true" role="dialog">
+        <div class="onboarding-card">
+            <div class="speech-bubble" id="charSpeech">
+                Halo! Kenalan dulu yuk, nama panggilan kamu siapa?
+            </div>
+
+            <div class="character-stage">
+                <img
+                    id="charPoseImg"
+                    src="./assets/pose-halo.png"
+                    alt="Karakter pendamping DOMPETKU"
+                    onerror="this.style.display='none'; document.getElementById('charFallback').style.display='flex';"
+                >
+                <div id="charFallback" class="character-fallback" style="display:none;">👋</div>
+            </div>
+
+            <form id="onboardingForm" class="modal-form">
+                <div class="form-group">
+                    <label for="nicknameInput">Nama panggilan</label>
+                    <input
+                        type="text"
+                        id="nicknameInput"
+                        placeholder="Misal: Raka, Dimas, Nisa..."
+                        maxlength="24"
+                        autocomplete="off"
+                        required
+                    >
+                </div>
+                <button type="submit" class="btn-primary" id="saveNicknameBtn" style="width:100%;">
+                    Lanjut ke DOMPETKU
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <main class="container">
+        <!-- HEADER -->
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <img src="icon.png" alt="DOMPETKU" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                    <span style="display:none;">💼</span>
+                </div>
+                <h1>DOMPET<span>KU</span></h1>
+            </div>
+            <div class="header-clock" id="currentDate"></div>
+        </header>
+
+        <!-- TAMPILAN BERANDA -->
+        <div id="homeView">
+            <!-- GREETING -->
+            <section class="greeting">
+                <div class="greeting-top">
+                    <h2 id="greetingTitle">Hai!</h2>
+                    <button type="button" class="btn-edit-name" id="editNicknameBtn" title="Ganti nama panggilan">
+                        Ganti nama
+                    </button>
+                </div>
+                <p id="greetingSubtitle">Aku bakal nemenin kamu ngatur keuangan di sini.</p>
+            </section>
+
+            <!-- SALDO -->
+            <section class="balance-card">
+                <p class="balance-label">Total Saldo</p>
+                <h1 class="balance-amount mono" id="balanceAmount">Rp0</h1>
+                <div class="balance-footer">
+                    <span>Keuangan pribadimu</span>
+                    <span>● Aktif</span>
+                </div>
+            </section>
+
+            <!-- RINGKASAN -->
+            <section class="summary">
+                <div class="summary-card">
+                    <div class="summary-icon">📈</div>
+                    <p>Total Pemasukan</p>
+                    <h3 class="income mono" id="totalIncome">Rp0</h3>
+                </div>
+
+                <div class="summary-card">
+                    <div class="summary-icon">📉</div>
+                    <p>Total Pengeluaran</p>
+                    <h3 class="expense mono" id="totalExpense">Rp0</h3>
+                </div>
+            </section>
+
+            <!-- RINGKASAN PER KATEGORI -->
+            <section class="section" id="categorySummarySection">
+                <div class="section-header">
+                    <h3>Pengeluaran per Kategori</h3>
+                </div>
+                <div class="category-summary-list" id="categorySummaryList">
+                    <div class="transaction-item">
+                        <p class="text-muted">Belum ada pengeluaran.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MENU UTAMA -->
+            <section class="section">
+                <div class="section-header">
+                    <h3>Menu Keuangan</h3>
+                </div>
+
+                <div class="menu-grid">
+                    <div class="menu-item" data-action="income">
+                        <div class="icon">💰</div>
+                        <p>Pemasukan</p>
+                    </div>
+
+                    <div class="menu-item" data-action="expense">
+                        <div class="icon">💸</div>
+                        <p>Pengeluaran</p>
+                    </div>
+
+                    <div class="menu-item" id="btnTabungan">
+                        <div class="icon">🎯</div>
+                        <p>Isi Tabungan</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- TARGET TABUNGAN -->
+        <section class="section" id="savingsSection">
+            <div class="savings-card">
+                <div class="savings-header-row">
+                    <div class="savings-info">
+                        <h4>🎯 Target: Laptop Impian</h4>
+                        <p id="savingsRemainingText">Sisa target: Rp15.000.000</p>
+                    </div>
+                    <span class="savings-percent mono" id="savingsPercentText">0%</span>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="savingsProgress" style="width: 0%;"></div>
+                </div>
+
+                <div class="balance-footer">
+                    <span class="mono" id="savedAmountText">Rp0 terkumpul</span>
+                    <span class="mono">Target: Rp15.000.000</span>
+                </div>
+
+                <div class="savings-actions" id="savingsActions">
+                    <button type="button" class="btn-primary savings-action-btn" id="quickDepositBtn">
+                        + Setor Tabungan
+                    </button>
+                    <button type="button" class="btn-secondary savings-action-btn" id="quickWithdrawBtn">
+                        Tarik ke Saldo
+                    </button>
+                </div>
+            </div>
+
+            <div class="section savings-history-wrap" id="savingsHistoryWrap">
+                <div class="section-header">
+                    <h3>Riwayat Tabungan</h3>
+                </div>
+                <div class="transaction-list" id="savingsHistoryList">
+                    <div class="transaction-item">
+                        <p class="text-muted">Belum ada catatan tabungan.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- RIWAYAT TRANSAKSI -->
+        <section class="section" id="transactionSection">
+            <div class="transaction-stats" id="transactionStats">
+                <div class="stat-pill">
+                    <span>Masuk</span>
+                    <strong class="income mono" id="trxTabIncome">Rp0</strong>
+                </div>
+                <div class="stat-pill">
+                    <span>Keluar</span>
+                    <strong class="expense mono" id="trxTabExpense">Rp0</strong>
+                </div>
+                <div class="stat-pill">
+                    <span>Jumlah</span>
+                    <strong class="mono" id="trxTabCount">0 trx</strong>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <h3>Transaksi Terakhir</h3>
+                <select id="filterCategory" class="filter-select" aria-label="Filter kategori transaksi">
+                    <option value="ALL">Semua Kategori</option>
+                    <option value="Pekerjaan">Pekerjaan</option>
+                    <option value="Makanan">Makanan</option>
+                    <option value="Transportasi">Transportasi</option>
+                    <option value="Belanja">Belanja</option>
+                    <option value="Tagihan">Tagihan</option>
+                    <option value="Lainnya">Lainnya</option>
+                </select>
+            </div>
+
+            <div class="transaction-list" id="transactionList">
+                <div class="transaction-item">
+                    <p class="text-muted">Belum ada transaksi.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- MODAL TRANSAKSI -->
+    <div class="modal" id="transactionModal">
+        <div class="modal-content">
+            <h3 id="modalTitle" style="margin-bottom: 16px;">Tambah Transaksi</h3>
+
+            <form id="transactionForm" class="modal-form">
+                <div class="form-group">
+                    <label for="description">Nama Transaksi</label>
+                    <input type="text" id="description" placeholder="Contoh: Shopee, Kopi, Gaji..." autocomplete="off" required>
+                    <div class="recent-chips" id="recentNameChips" aria-label="Riwayat nama transaksi"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="amount">Nominal (Rupiah)</label>
+                    <input type="text" id="amount" inputmode="numeric" placeholder="Contoh: 50.000" required>
+                </div>
+
+                <div class="form-group" id="categoryGroup">
+                    <label for="category">Kategori</label>
+                    <select id="category">
+                        <option value="">Pilih kategori</option>
+                        <option value="Pekerjaan">💼 Pekerjaan</option>
+                        <option value="Makanan">🍜 Makanan</option>
+                        <option value="Transportasi">🛵 Transportasi</option>
+                        <option value="Belanja">🛍️ Belanja</option>
+                        <option value="Tagihan">🧾 Tagihan</option>
+                        <option value="Lainnya">✨ Lainnya</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-primary" style="width:100%;">Simpan Transaksi</button>
+                <button type="button" class="btn-secondary" id="closeModal" style="width:100%;">Batal</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL TABUNGAN -->
+    <div class="modal" id="savingsModal">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 16px;">Kelola Tabungan Laptop</h3>
+            <form id="savingsForm" class="modal-form">
+                <div class="form-group">
+                    <label for="savingsInput">Nominal Tabungan (Rupiah)</label>
+                    <input type="text" id="savingsInput" inputmode="numeric" placeholder="Contoh: 100.000" required>
+                </div>
+                <button type="submit" class="btn-primary" style="width:100%;">Simpan Tabungan</button>
+                <button type="button" class="btn-secondary" id="withdrawSavingsBtn" style="width:100%;">Tarik ke Saldo</button>
+                <button type="button" class="btn-secondary" id="closeSavingsModal" style="width:100%;">Batal</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- NAVIGASI BAWAH -->
+    <nav class="bottom-nav">
+        <button type="button" class="nav-item active" data-nav="home">
+            <span class="nav-icon">🏠</span>
+            <span>Beranda</span>
+        </button>
+
+        <button type="button" class="nav-item" data-nav="transactions">
+            <span class="nav-icon">💰</span>
+            <span>Transaksi</span>
+        </button>
+
+        <button type="button" class="nav-item" data-nav="savings">
+            <span class="nav-icon">🎯</span>
+            <span>Tabungan</span>
+        </button>
+    </nav>
+
+    <script src="script.js"></script>
+</body>
+</html>
