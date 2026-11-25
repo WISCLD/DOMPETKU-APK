@@ -38,7 +38,22 @@ const closeSavingsModal = document.getElementById("closeSavingsModal");
 const savingsProgress = document.getElementById("savingsProgress");
 const savedAmountText = document.getElementById("savedAmountText");
 
-// 3. FORMAT RUPIAH & TANGGAL
+// 3. TEMA DINAMIS BERBASIS WAKTU (PAGI / SIANG / SORE / MALAM)
+function getTimeTheme(hour) {
+    if (hour >= 5 && hour < 11) return "pagi";
+    if (hour >= 11 && hour < 16) return "siang";
+    if (hour >= 16 && hour < 19) return "sore";
+    return "malam";
+}
+
+function applyTimeTheme() {
+    const now = new Date();
+    const theme = getTimeTheme(now.getHours());
+    document.documentElement.setAttribute("data-time-theme", theme);
+    document.body.setAttribute("data-time-theme", theme);
+}
+
+// 4. FORMAT RUPIAH & TANGGAL
 function formatRupiah(amount) {
     return new Intl.NumberFormat("id-ID", {
         style: "currency",
@@ -57,7 +72,7 @@ function setHeaderDate() {
     });
 }
 
-// 4. NAVIGASI BAWAH
+// 5. NAVIGASI BAWAH
 function setActiveTab(tab) {
     navButtons.forEach((btn) => {
         btn.classList.toggle("active", btn.getAttribute("data-nav") === tab);
@@ -87,7 +102,7 @@ navButtons.forEach((btn) => {
     });
 });
 
-// 5. SIMPAN & HITUNG DATA
+// 6. SIMPAN & HITUNG DATA
 function saveData() {
     localStorage.setItem("dompetku_transactions", JSON.stringify(transactions));
     localStorage.setItem("dompetku_savings", currentSavings.toString());
@@ -123,7 +138,7 @@ function updateDashboard() {
     renderCategorySummary();
 }
 
-// 6. EVENT LISTENER MODAL TRANSAKSI
+// 7. EVENT LISTENER MODAL TRANSAKSI
 document.querySelectorAll(".menu-item[data-action]").forEach((item) => {
     item.addEventListener("click", () => {
         const action = item.getAttribute("data-action");
@@ -164,7 +179,7 @@ transactionForm?.addEventListener("submit", (event) => {
     modal?.classList.remove("show");
 });
 
-// 7. EVENT LISTENER MODAL TABUNGAN
+// 8. EVENT LISTENER MODAL TABUNGAN
 btnTabungan?.addEventListener("click", () => {
     savingsForm?.reset();
     savingsModal?.classList.add("show");
@@ -210,7 +225,7 @@ withdrawSavingsBtn?.addEventListener("click", () => {
     savingsModal?.classList.remove("show");
 });
 
-// 8. FILTER & TAMPILKAN RIWAYAT TRANSAKSI
+// 9. FILTER & TAMPILKAN RIWAYAT TRANSAKSI
 filterCategory?.addEventListener("change", () => {
     selectedCategory = filterCategory.value;
     renderTransactions();
@@ -319,7 +334,7 @@ function renderCategorySummary() {
     });
 }
 
-// 9. DAFTARKAN SERVICE WORKER (PWA OFFLINE)
+// 10. DAFTARKAN SERVICE WORKER (PWA OFFLINE)
 if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
         navigator.serviceWorker.register("./sw.js")
@@ -328,7 +343,10 @@ if ("serviceWorker" in navigator) {
     });
 }
 
-// 10. JALANKAN APLIKASI
+// 11. JALANKAN APLIKASI
+applyTimeTheme();
+setInterval(applyTimeTheme, 60000);
 setHeaderDate();
 updateDashboard();
 renderTransactions();
+
