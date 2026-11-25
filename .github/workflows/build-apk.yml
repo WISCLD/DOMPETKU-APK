@@ -26,7 +26,25 @@ jobs:
           java-version: "17"
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+        run: |
+          SDK_ROOT="/usr/local/lib/android/sdk"
+          mkdir -p "$SDK_ROOT/cmdline-tools"
+          LATEST_DIR=$(find "$SDK_ROOT/cmdline-tools" -mindepth 1 -maxdepth 1 -type d | head -n 1 || true)
+          if [ -z "$LATEST_DIR" ]; then
+            curl -sSL "https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip" -o /tmp/cmdtools.zip
+            unzip -q /tmp/cmdtools.zip -d /tmp/cmdtools-extracted
+            mv /tmp/cmdtools-extracted/cmdline-tools "$SDK_ROOT/cmdline-tools/latest"
+            rm -rf /tmp/cmdtools.zip /tmp/cmdtools-extracted
+          elif [ "$(basename "$LATEST_DIR")" != "latest" ]; then
+            mv "$LATEST_DIR" "$SDK_ROOT/cmdline-tools/latest"
+          fi
+
+          echo "ANDROID_HOME=$SDK_ROOT" >> "$GITHUB_ENV"
+          echo "ANDROID_SDK_ROOT=$SDK_ROOT" >> "$GITHUB_ENV"
+          echo "$SDK_ROOT/cmdline-tools/latest/bin:$SDK_ROOT/platform-tools:$SDK_ROOT/build-tools/34.0.0" >> "$GITHUB_PATH"
+
+          yes | sdkmanager --sdk_root="$SDK_ROOT" --licenses > /dev/null || true
+          yes | sdkmanager --sdk_root="$SDK_ROOT" "platform-tools" "platforms;android-34" "build-tools;34.0.0"
 
       - name: Install dependencies
         run: npm install
@@ -47,4 +65,3 @@ jobs:
         with:
           name: dompetku-debug-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
-          
