@@ -27,21 +27,20 @@ jobs:
 
       - name: Setup Android SDK
         run: |
-          SDK_ROOT="/usr/local/lib/android/sdk"
+          SDK_ROOT="$HOME/android-sdk"
           mkdir -p "$SDK_ROOT/cmdline-tools"
 
-          if [ ! -x "$SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" ]; then
-            rm -rf /tmp/cmdtools.zip /tmp/cmdtools-extracted "$SDK_ROOT/cmdline-tools/latest"
-            curl -fSL "https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip" -o /tmp/cmdtools.zip
-            unzip -q /tmp/cmdtools.zip -d /tmp/cmdtools-extracted
-            if [ -d "/tmp/cmdtools-extracted/cmdline-tools" ]; then
-              mv /tmp/cmdtools-extracted/cmdline-tools "$SDK_ROOT/cmdline-tools/latest"
-            else
-              mkdir -p "$SDK_ROOT/cmdline-tools/latest"
-              mv /tmp/cmdtools-extracted/* "$SDK_ROOT/cmdline-tools/latest/"
-            fi
-            rm -rf /tmp/cmdtools.zip /tmp/cmdtools-extracted
+          rm -rf /tmp/cmdtools.zip /tmp/cmdtools-extracted "$SDK_ROOT/cmdline-tools/latest"
+          curl -fSL "https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip" -o /tmp/cmdtools.zip
+          unzip -q /tmp/cmdtools.zip -d /tmp/cmdtools-extracted
+
+          if [ -d "/tmp/cmdtools-extracted/cmdline-tools" ]; then
+            mv /tmp/cmdtools-extracted/cmdline-tools "$SDK_ROOT/cmdline-tools/latest"
+          else
+            mkdir -p "$SDK_ROOT/cmdline-tools/latest"
+            mv /tmp/cmdtools-extracted/* "$SDK_ROOT/cmdline-tools/latest/"
           fi
+          rm -rf /tmp/cmdtools.zip /tmp/cmdtools-extracted
 
           SDKMANAGER="$SDK_ROOT/cmdline-tools/latest/bin/sdkmanager"
           chmod +x "$SDKMANAGER"
@@ -72,5 +71,6 @@ jobs:
         with:
           name: dompetku-debug-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
+
 
 
