@@ -1,0 +1,8 @@
+{
+  "appId": "com.wiscld.dompetku",
+  "appName": "DOMPETKU",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  }
+}
