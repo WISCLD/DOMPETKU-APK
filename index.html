@@ -32,10 +32,10 @@
       <div class="onboarding-step" data-step="1">
         <span class="step-pill">Langkah 1 dari 3</span>
         <h2>Halo! Kenalan dulu yuk</h2>
-        <p class="muted-text">Isi sesuai kondisimu sendiri. Bisa diubah kapan saja lewat menu titik tiga (⋮).</p>
+        <p class="muted-text">Isi sesuai kondisimu sendiri. Bisa diubah kapan saja lewat menu titik tiga.</p>
         <div class="form-group">
           <label for="obUserName">Nama panggilanmu</label>
-          <input type="text" id="obUserName" placeholder="Misal: Dimas" maxlength="24" autocomplete="off" />
+          <input type="text" id="obUserName" placeholder="Misal: Raka / Nisa" maxlength="24" autocomplete="off" />
         </div>
         <div class="form-group">
           <label for="obMonthlyIncome">Perkiraan pemasukan bulanan (opsional)</label>
@@ -47,15 +47,15 @@
 
       <div class="onboarding-step hidden" data-step="2">
         <span class="step-pill">Langkah 2 dari 3</span>
-        <h2>Mau menargetkan apa?</h2>
-        <p class="muted-text">Tulis sendiri tujuan tabunganmu dan berapa total nominal yang ingin dicapai.</p>
+        <h2>Target Tabunganmu</h2>
+        <p class="muted-text">Tulis sendiri tujuan tabungan dan total nominal target yang ingin kamu capai.</p>
         <div class="form-group">
-          <label for="obGoalName">Nama target tabungan</label>
-          <input type="text" id="obGoalName" placeholder="Contoh: Beli Helm / Upgrade RAM / Bayar Kos" maxlength="32" autocomplete="off" />
+          <label for="obGoalName">Nama tujuan tabungan</label>
+          <input type="text" id="obGoalName" placeholder="Tulis tujuan tabunganmu sendiri..." maxlength="32" autocomplete="off" />
         </div>
         <div class="form-group">
           <label for="obGoalAmount">Total nominal target (Rp)</label>
-          <div class="input-prefix"><span>Rp</span><input type="text" id="obGoalAmount" inputmode="numeric" data-currency placeholder="Masukkan nominal..." /></div>
+          <div class="input-prefix"><span>Rp</span><input type="text" id="obGoalAmount" inputmode="numeric" data-currency placeholder="Masukkan nominal bebas" /></div>
         </div>
         <div class="onboarding-actions two-col">
           <button type="button" class="btn btn-ghost" id="btnObSkip2">Lewati dulu</button>
@@ -85,7 +85,7 @@
     </div>
   </section>
 
-  <!-- 3. TUTORIAL SINGKAT AWAL INSTAL -->
+  <!-- 3. TUTORIAL SINGKAT 4 LANGKAH -->
   <div id="tutorialOverlay" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="tutTitle">
     <div class="tutorial-card">
       <div class="tutorial-header">
@@ -105,7 +105,6 @@
 
   <!-- 4. APP SHELL UTAMA -->
   <div id="appShell" class="app-shell hidden">
-    <!-- Top Header + Menu Titik Tiga (⋮) -->
     <header class="app-header">
       <div class="header-left">
         <span id="timeGreetingText" class="greeting-sub">Selamat Pagi</span>
@@ -128,7 +127,6 @@
       </div>
     </header>
 
-    <!-- Main Content Views -->
     <main class="app-main">
       <!-- ==================== TAB 1: BERANDA ==================== -->
       <section id="viewHome" class="view-section active" aria-label="Beranda">
@@ -183,18 +181,18 @@
           <div class="card-header-row">
             <div>
               <span class="eyebrow">Target Tabungan</span>
-              <h2 id="homeGoalTitle" class="card-title">Belum ada target</h2>
+              <h2 id="homeGoalTitle" class="card-title">Target belum ditentukan</h2>
             </div>
             <button type="button" class="btn btn-sm btn-secondary" id="btnQuickSave">+ Setor</button>
           </div>
           <div class="goal-numbers">
             <strong id="homeGoalSaved">Rp0</strong>
-            <span id="homeGoalTarget">dari Rp0</span>
+            <span id="homeGoalTarget">Atur target sendiri</span>
           </div>
           <div class="progress-track">
             <div id="homeGoalBar" class="progress-fill accent" style="width: 0%;"></div>
           </div>
-          <p id="homeGoalEta" class="eta-note">Belum ada riwayat setor — mulai setor untuk melihat estimasi tercapai.</p>
+          <p id="homeGoalEta" class="eta-note">Tentukan nama dan total target tabunganmu sendiri di menu ⋮ atau tab Tabungan.</p>
         </div>
 
         <div class="section-block">
@@ -215,20 +213,20 @@
           <div class="card-header-row">
             <div>
               <span class="eyebrow">Pos Tujuan Khusus</span>
-              <h2 id="savGoalName" class="card-title">Target Tabungan</h2>
+              <h2 id="savGoalName" class="card-title">Belum ada target tabungan</h2>
             </div>
             <button type="button" class="btn-link" data-action="open-goal-modal">Ubah Target</button>
           </div>
           <div class="savings-hero">
             <div id="savCurrentAmount" class="savings-big">Rp0</div>
-            <div id="savTargetSub" class="muted-text">Target: Rp0 (0%)</div>
+            <div id="savTargetSub" class="muted-text">Tulis sendiri target dan nominalnya lewat tombol Ubah Target</div>
           </div>
           <div class="progress-track large">
             <div id="savProgressBar" class="progress-fill accent" style="width: 0%;"></div>
           </div>
           <div class="info-callout" id="savEtaBox">
             <strong>Estimasi Tercapai:</strong>
-            <span id="savEtaDetail">Data setoran masih minim. Setor minimal 2 kali agar estimasi bisa dihitung secara jujur.</span>
+            <span id="savEtaDetail">Isi target tabunganmu sendiri agar progres dan estimasi bisa berjalan.</span>
           </div>
           <div class="action-row two-col">
             <button type="button" class="btn btn-primary" id="btnOpenDeposit">Setor ke Tabungan</button>
@@ -305,7 +303,6 @@
       </section>
     </main>
 
-    <!-- Bottom Navigation -->
     <nav class="bottom-nav" aria-label="Navigasi Utama">
       <button type="button" class="nav-item active" data-nav="home">
         <span class="nav-icon">🏠</span>
@@ -325,11 +322,7 @@
     </nav>
   </div>
 
-  <!-- =========================================================
-       5. MODAL / BOTTOM SHEET
-  ========================================================== -->
-
-  <!-- Modal Catat / Edit Transaksi -->
+  <!-- 5. MODAL / BOTTOM SHEET -->
   <div id="txModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="txModalTitle">
     <div class="sheet-card">
       <div class="sheet-header">
@@ -383,7 +376,6 @@
     </div>
   </div>
 
-  <!-- Modal Setor / Tarik Tabungan -->
   <div id="savingsModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="savModalTitle">
     <div class="sheet-card">
       <div class="sheet-header">
@@ -406,7 +398,6 @@
     </div>
   </div>
 
-  <!-- Modal Ubah Target Tabungan (Bebas Diisi Sendiri) -->
   <div id="goalModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="goalModalTitle">
     <div class="sheet-card">
       <div class="sheet-header">
@@ -416,18 +407,17 @@
       <form id="goalForm" novalidate>
         <div class="form-group">
           <label for="goalNameInput">Nama Target</label>
-          <input type="text" id="goalNameInput" placeholder="Ketik sendiri target tabunganmu..." maxlength="32" required autocomplete="off" />
+          <input type="text" id="goalNameInput" placeholder="Tulis tujuan tabunganmu sendiri..." maxlength="32" required autocomplete="off" />
         </div>
         <div class="form-group">
           <label for="goalTargetInput">Total Nominal Target (Rp)</label>
-          <div class="input-prefix"><span>Rp</span><input type="text" id="goalTargetInput" inputmode="numeric" data-currency placeholder="Ketik total nominal..." required /></div>
+          <div class="input-prefix"><span>Rp</span><input type="text" id="goalTargetInput" inputmode="numeric" data-currency placeholder="Masukkan nominal bebas" required /></div>
         </div>
         <button type="submit" class="btn btn-primary btn-block">Simpan Target</button>
       </form>
     </div>
   </div>
 
-  <!-- Modal Pengaturan & Batas Harian -->
   <div id="settingsModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="settingsModalTitle">
     <div class="sheet-card">
       <div class="sheet-header">
@@ -456,7 +446,6 @@
     </div>
   </div>
 
-  <!-- Modal Catatan Utang / Cicilan Simpel -->
   <div id="debtModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="debtModalTitle">
     <div class="sheet-card">
       <div class="sheet-header">
@@ -481,10 +470,8 @@
     </div>
   </div>
 
-  <!-- Toast Feedback Ringan -->
   <div id="toastBanner" class="toast-banner hidden" role="status" aria-live="polite"></div>
 
-  <!-- Scripts -->
   <script src="js/storage.js"></script>
   <script src="js/finance.js"></script>
   <script src="js/app.js"></script>
