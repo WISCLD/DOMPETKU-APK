@@ -41,8 +41,8 @@ const DompetkuStorage = (() => {
         customLeak: ""
       },
       goal: {
-        title: "Dana Darurat",
-        targetAmount: 1000000,
+        title: "",
+        targetAmount: 0,
         savedAmount: 0,
         history: []
       },
@@ -71,6 +71,7 @@ const DompetkuStorage = (() => {
       goal: {
         ...def.goal,
         ...(raw.goal || {}),
+        title: typeof raw.goal?.title === "string" ? raw.goal.title : "",
         targetAmount: Math.max(0, Number(raw.goal?.targetAmount) || 0),
         savedAmount: Math.max(0, Number(raw.goal?.savedAmount) || 0),
         history: Array.isArray(raw.goal?.history) ? raw.goal.history : []
@@ -170,4 +171,3 @@ const DompetkuStorage = (() => {
     generateId
   };
 })();
-
